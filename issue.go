@@ -22,12 +22,8 @@ type IssueService struct {
 	Attachment *IssueAttachmentService
 }
 
-func (s *IssueService) All(projectIDOrKey string, options ...*QueryOption) ([]*Issue, error) {
-	if err := validateProjectIDOrKey(projectIDOrKey); err != nil {
-		return nil, err
-	}
-
-	validOptions := []queryType{queryOrder, queryOffset, queryCreatedSince, queryCreatedUntil, queryUpdatedSince, queryUpdatedUntil}
+func (s *IssueService) All(projectIDs []int, options ...*QueryOption) ([]*Issue, error) {
+	validOptions := []queryType{queryOrder, queryCount, queryOffset, queryCreatedSince, queryCreatedUntil, queryUpdatedSince, queryUpdatedUntil}
 	for _, option := range options {
 		if err := option.validate(validOptions); err != nil {
 			return nil, err
@@ -35,12 +31,19 @@ func (s *IssueService) All(projectIDOrKey string, options ...*QueryOption) ([]*I
 	}
 
 	query := NewQueryParams()
+	for _, projectID := range projectIDs {
+		if query.Get("projectId[]") == "" {
+			query.Set("projectId[]", strconv.Itoa(projectID))
+		} else {
+			query.Add("projectId[]", strconv.Itoa(projectID))
+		}
+	}
+
 	for _, option := range options {
 		if err := option.set(query); err != nil {
 			return nil, err
 		}
 	}
-	query.Set("projectIdOrKey", projectIDOrKey)
 
 	resp, err := s.method.Get("issues", query)
 	if err != nil {

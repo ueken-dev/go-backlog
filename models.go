@@ -54,7 +54,7 @@ type Comment struct {
 	CreatedUser   *User           `json:"createdUser,omitempty"`
 	Created       time.Time       `json:"created,omitempty"`
 	Updated       time.Time       `json:"updated,omitempty"`
-	Stars         *Star           `json:"stars,omitempty"`
+	Stars         []*Star         `json:"stars,omitempty"`
 	Notifications []*Notification `json:"notifications,omitempty"`
 }
 
@@ -166,12 +166,12 @@ type Issue struct {
 	Status         *Status        `json:"status,omitempty"`
 	Assignee       *User          `json:"assignee,omitempty"`
 	Category       *Category      `json:"category,omitempty"`
-	Versions       *Version       `json:"versions,omitempty"`
-	Milestone      *Version       `json:"milestone,omitempty"`
+	Versions       []*Version     `json:"versions,omitempty"`
+	Milestone      []*Version     `json:"milestone,omitempty"`
 	StartDate      time.Time      `json:"startDate,omitempty"`
 	DueDate        time.Time      `json:"dueDate,omitempty"`
-	EstimatedHours int            `json:"estimatedHours,omitempty"`
-	ActualHours    int            `json:"actualHours,omitempty"`
+	EstimatedHours float32        `json:"estimatedHours,omitempty"`
+	ActualHours    float32        `json:"actualHours,omitempty"`
 	ParentIssueID  int            `json:"parentIssueId,omitempty"`
 	CreatedUser    *User          `json:"createdUser,omitempty"`
 	Created        time.Time      `json:"created,omitempty"`

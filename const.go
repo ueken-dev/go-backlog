@@ -52,4 +52,9 @@ const (
 	queryMaxID
 	queryMinID
 	queryOrder
+	queryOffset
+	queryCreatedSince
+	queryCreatedUntil
+	queryUpdatedSince
+	queryUpdatedUntil
 )

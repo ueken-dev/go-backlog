@@ -3,6 +3,7 @@ package backlog
 import (
 	"fmt"
 	"strconv"
+	"time"
 )
 
 type formType int
@@ -39,6 +40,11 @@ func (t queryType) Value() string {
 		queryMaxID:           "maxId",
 		queryMinID:           "minId",
 		queryOrder:           "order",
+		queryOffset:          "offset",
+		queryCreatedSince:    "createdSince",
+		queryCreatedUntil:    "createdUntil",
+		queryUpdatedSince:    "updatedSince",
+		queryUpdatedUntil:    "updatedUntil",
 	}
 
 	return m[t]
@@ -139,6 +145,44 @@ func withQueryOrder(order Order) *QueryOption {
 	}}
 }
 
+func withQueryOffset(offset int) *QueryOption {
+	return &QueryOption{queryOffset, func(query *QueryParams) error {
+		if offset < 0 {
+			return newValidationError("offset must not be less than 0")
+		}
+		query.Set(queryOffset.Value(), strconv.Itoa(offset))
+		return nil
+	}}
+}
+
+func withQueryCreatedUntil(createdUntil time.Time) *QueryOption {
+	return &QueryOption{queryCreatedUntil, func(query *QueryParams) error {
+		query.Set(queryCreatedUntil.Value(), createdUntil.Format("2006-01-02"))
+		return nil
+	}}
+}
+
+func withQueryCreatedSince(createdSince time.Time) *QueryOption {
+	return &QueryOption{queryCreatedSince, func(query *QueryParams) error {
+		query.Set(queryCreatedSince.Value(), createdSince.Format("2006-01-02"))
+		return nil
+	}}
+}
+
+func withQueryUpdatedUntil(updatedUntil time.Time) *QueryOption {
+	return &QueryOption{queryUpdatedUntil, func(query *QueryParams) error {
+		query.Set(queryUpdatedUntil.Value(), updatedUntil.Format("2006-01-02"))
+		return nil
+	}}
+}
+
+func withQueryUpdatedSince(updatedSince time.Time) *QueryOption {
+	return &QueryOption{queryUpdatedSince, func(query *QueryParams) error {
+		query.Set(queryUpdatedSince.Value(), updatedSince.Format("2006-01-02"))
+		return nil
+	}}
+}
+
 // QueryOptionService has methods to make option for request query.
 type QueryOptionService struct {
 }
@@ -181,6 +225,31 @@ func (s *QueryOptionService) WithMinID(minID int) *QueryOption {
 // WithOrder returns option to set `order`.
 func (s *QueryOptionService) WithOrder(order Order) *QueryOption {
 	return withQueryOrder(order)
+}
+
+// WithOffset returns option to set `offset`.
+func (s *QueryOptionService) WithOffset(offset int) *QueryOption {
+	return withQueryOffset(offset)
+}
+
+// WithCreatedSince returns option to set `createdSince`.
+func (s *QueryOptionService) WithCreatedSince(createdSince time.Time) *QueryOption {
+	return withQueryCreatedSince(createdSince)
+}
+
+// WithCreatedUntil returns option to set `createdUntil`.
+func (s *QueryOptionService) WithCreatedUntil(createdUntil time.Time) *QueryOption {
+	return withQueryCreatedUntil(createdUntil)
+}
+
+// WithUpdatedSince returns option to set `updatedSince`.
+func (s *QueryOptionService) WithUpdatedSince(updatedSince time.Time) *QueryOption {
+	return withQueryUpdatedSince(updatedSince)
+}
+
+// WithUpdatedUntil returns option to set `updatedUntil`.
+func (s *QueryOptionService) WithUpdatedUntil(updatedUntil time.Time) *QueryOption {
+	return withQueryUpdatedUntil(updatedUntil)
 }
 
 type formOptionFunc func(form *FormParams) error

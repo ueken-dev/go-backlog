@@ -1,4 +1,4 @@
-module github.com/nattokin/go-backlog
+module github.com/ueken-dev/go-backlog
 
 go 1.17
 

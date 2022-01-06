@@ -146,9 +146,9 @@ func withQueryOrder(order Order) *QueryOption {
 }
 
 func withQueryOffset(offset int) *QueryOption {
-	return &QueryOption{queryMaxID, func(query *QueryParams) error {
-		if offset < 1 {
-			return newValidationError("offset must not be less than 1")
+	return &QueryOption{queryOffset, func(query *QueryParams) error {
+		if offset < 0 {
+			return newValidationError("offset must not be less than 0")
 		}
 		query.Set(queryOffset.Value(), strconv.Itoa(offset))
 		return nil
